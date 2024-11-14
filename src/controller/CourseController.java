@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import exception.CourseNotFoundException;
 import exception.StudentNotFoundException;
@@ -18,6 +19,9 @@ import service.CourseService;
 import service.RegistrationService;
 import service.ScheduleService;
 import service.StudentService;
+import utility.CourseActivityUtil;
+import utility.EnrollmentActivityUtil;
+import utility.StudentActivityUtil;
 
 public class CourseController {
 
@@ -26,6 +30,9 @@ public class CourseController {
 	private final ScheduleService scheduleService;
 	private final StudentService studentService;
 	private final BufferedReader br;
+	private final CourseActivityUtil courseActivityUtil;
+	private final StudentActivityUtil studentActivityUtil;
+	private final EnrollmentActivityUtil enrollmentActivityUtil;
 	
 	public CourseController() {
 		this.courseService = new CourseService();
@@ -33,6 +40,9 @@ public class CourseController {
 		this.scheduleService = new ScheduleService();
 		this.studentService = new StudentService();
 		this.br = new BufferedReader(new InputStreamReader(System.in));
+		this.courseActivityUtil=new CourseActivityUtil();
+		this.enrollmentActivityUtil=new EnrollmentActivityUtil();
+		this.studentActivityUtil=new StudentActivityUtil();
 	}
 	
 	public void start() throws NumberFormatException, IOException, SQLException, StudentNotFoundException, CourseNotFoundException {
@@ -84,6 +94,19 @@ public class CourseController {
 			case 9:
 				removeCourseSchedule();
 				break;
+			
+			case 10:
+				viewStudentLog();
+				break;
+			
+			case 11:
+				viewCourseLog();
+				break;
+			
+			case 12:
+				viewEnrollmentLog();
+				break;
+				
 			default:
 				System.out.println("Invalid option");
 			}
@@ -91,6 +114,40 @@ public class CourseController {
 		}
 	}
 	
+	private void viewCourseLog() {
+	    List<String> courseLogs = courseActivityUtil.retrieveCourseActivity();
+	    if (courseLogs.isEmpty()) {
+	        System.out.println("No course log entries found.");
+	    } else {
+	        for (String log : courseLogs) {
+	            System.out.println(log);
+	        }
+	    }
+	}
+
+	private void viewEnrollmentLog() {
+	    List<String> enrollmentLogs = enrollmentActivityUtil.retrieveEnrollmentActivity();
+	    if (enrollmentLogs.isEmpty()) {
+	        System.out.println("No enrollment log entries found.");
+	    } else {
+	        for (String log : enrollmentLogs) {
+	            System.out.println(log);
+	        }
+	    }
+	}
+
+	private void viewStudentLog() {
+	    List<String> studentLogs = studentActivityUtil.retrieveStudentActivity();
+	    if (studentLogs.isEmpty()) {
+	        System.out.println("No student log entries found.");
+	    } else {
+	        for (String log : studentLogs) {
+	            System.out.println(log);
+	        }
+	    }
+	}
+
+
 	private void removeCourseSchedule() throws NumberFormatException, IOException {
 		System.out.println("Enter the Schedule_Id :");
 		int scheduleId = Integer.parseInt(br.readLine());
@@ -200,18 +257,21 @@ public class CourseController {
 	    System.out.println("==========================================");
 	    System.out.println("|       COURSE REGISTRATION SYSTEM       |");
 	    System.out.println("==========================================");
-	    System.out.println("|  [1]  ADD STUDENT                      |");
-	    System.out.println("|  [2]  REMOVE STUDENT                   |");
-	    System.out.println("|  [3]  ADD COURSE                       |");
-	    System.out.println("|  [4]  REMOVE COURSE                    |");
-	    System.out.println("|  [5]  REGISTER NEW COURSE              |");
-	    System.out.println("|  [6]  DROP A COURSE                    |");
-	    System.out.println("|  [7]  VIEW AVAILABLE COURSE            |");
-	    System.out.println("|  [8]  ADD COURSE SCHEDULE              |");
-	    System.out.println("|  [9]  DELETE A COURSE SCHEDULE         |");
-	    System.out.println("|  [0]  EXIT                             |");
+	    System.out.println("|  [ 1]  ADD STUDENT                    |");
+	    System.out.println("|  [ 2]  REMOVE STUDENT                 |");
+	    System.out.println("|  [ 3]  ADD COURSE                     |");
+	    System.out.println("|  [ 4]  REMOVE COURSE                  |");
+	    System.out.println("|  [ 5]  REGISTER NEW COURSE            |");
+	    System.out.println("|  [ 6]  DROP A COURSE                  |");
+	    System.out.println("|  [ 7]  VIEW AVAILABLE COURSE          |");
+	    System.out.println("|  [ 8]  ADD COURSE SCHEDULE            |");
+	    System.out.println("|  [ 9]  DELETE A COURSE SCHEDULE       |");
+	    System.out.println("|  [10]  READ STUDENT LOG               |");
+	    System.out.println("|  [11]  READ COURSE LOG                |");
+	    System.out.println("|  [12]  READ ENROLLMENTS LOG           |");
+	    System.out.println("|  [ 0]  EXIT                           |");
 	    System.out.println("==========================================");
-	    System.out.println("Please select an option (0-9): ");
+	    System.out.print("Please select an option (0-12): ");
 	}
 
 }

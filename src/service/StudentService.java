@@ -1,5 +1,6 @@
 package service;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import dao.StudentDAO;
@@ -15,11 +16,11 @@ public class StudentService {
 		this.studentDAO = new StudentDAOimpl();
 	}
 
-	public void addStudent(Student student) throws SQLException {
+	public void addStudent(Student student) throws SQLException, IOException {
 		studentDAO.addStudent(student);
 	}
 
-	public void removeStudent(int studentId) throws StudentNotFoundException {
+	public void removeStudent(int studentId) throws StudentNotFoundException, IOException {
 		studentDAO.removeStudent(studentId);
 	}
 

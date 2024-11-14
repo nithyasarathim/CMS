@@ -10,9 +10,11 @@ import model.DoctoralCourse;
 import model.PostgraduateCourse;
 import model.UndergraduateCourse;
 import utility.DBconnection;
+import utility.CourseActivityUtil;
 
 public class CourseDAOimpl implements CourseDAO {
 
+	private CourseActivityUtil courseActivity= new CourseActivityUtil(); 
     @Override
     public void addCourse(UndergraduateCourse undergraduateCourse) {
         String sql = "INSERT INTO COURSES (course_name, course_description, credits, level_id, schedule, max_capacity, requirements) " +
@@ -31,11 +33,13 @@ public class CourseDAOimpl implements CourseDAO {
             
             ps.executeUpdate();
             
+            
             // Get generated course_id
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     int courseId = generatedKeys.getInt(1);
                     System.out.println("Undergraduate course added successfully. Course ID: " + courseId);
+                    courseActivity.logCourseAction("CREATED",courseId,undergraduateCourse.getCourseName());
                 }
             }
             
@@ -68,6 +72,7 @@ public class CourseDAOimpl implements CourseDAO {
                 if (generatedKeys.next()) {
                     int courseId = generatedKeys.getInt(1);
                     System.out.println("Postgraduate course added successfully. Course ID: " + courseId);
+                    courseActivity.logCourseAction("CREATED",courseId,postgraduateCourse.getCourseName());
                 }
             }
             
@@ -100,6 +105,7 @@ public class CourseDAOimpl implements CourseDAO {
                 if (generatedKeys.next()) {
                     int courseId = generatedKeys.getInt(1);
                     System.out.println("Doctoral course added successfully. Course ID: " + courseId);
+                    courseActivity.logCourseAction("CREATED",courseId,doctoralCourse.getCourseName());
                 }
             }
             
@@ -111,12 +117,29 @@ public class CourseDAOimpl implements CourseDAO {
 
     @Override
     public void removeCourse(int courseId) throws CourseNotFoundException {
-        String sql = "{CALL removeCourse(?)}"; 
-        try (Connection con = DBconnection.getConnection(); 
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, courseId);
-            ps.executeUpdate();
-            System.out.println("Course removed successfully. Course ID: " + courseId);
+        String getCourseNameSql = "SELECT course_name FROM COURSES WHERE course_id = ?";
+        String removeCourseSql = "{CALL removeCourse(?)}";
+        String courseName = null;
+        
+        try (Connection con = DBconnection.getConnection()) {
+            
+            try (PreparedStatement ps = con.prepareStatement(getCourseNameSql)) {
+                ps.setInt(1, courseId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        courseName = rs.getString("course_name");
+                    } else {
+                        throw new CourseNotFoundException("Course with ID " + courseId + " not found.");
+                    }
+                }
+            }
+            try (PreparedStatement ps = con.prepareStatement(removeCourseSql)) {
+                ps.setInt(1, courseId);
+                ps.executeUpdate();
+                System.out.println("Course removed successfully. Course ID: " + courseId);
+                courseActivity.logCourseAction("REMOVED", courseId, courseName);
+            }
+            
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Error removing course with ID: " + courseId);
@@ -125,6 +148,7 @@ public class CourseDAOimpl implements CourseDAO {
             }
         }
     }
+
 
 	public void viewCourse() {
 	    String sql = "SELECT c.course_id, c.course_name, c.course_description, c.credits, " +
