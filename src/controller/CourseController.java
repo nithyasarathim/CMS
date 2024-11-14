@@ -80,7 +80,10 @@ public class CourseController {
 			case 8:
 				addCourseSchedule();
 				break;
-				
+			
+			case 9:
+				removeCourseSchedule();
+				break;
 			default:
 				System.out.println("Invalid option");
 			}
@@ -88,6 +91,13 @@ public class CourseController {
 		}
 	}
 	
+	private void removeCourseSchedule() throws NumberFormatException, IOException {
+		System.out.println("Enter the Schedule_Id :");
+		int scheduleId = Integer.parseInt(br.readLine());
+		scheduleService.removeCourseSchedule(scheduleId);
+		
+	}
+
 	private void viewCourse() {
 		courseService.viewCourse();
 		
@@ -198,6 +208,7 @@ public class CourseController {
 	    System.out.println("|  [6]  DROP A COURSE                    |");
 	    System.out.println("|  [7]  VIEW AVAILABLE COURSE            |");
 	    System.out.println("|  [8]  ADD COURSE SCHEDULE              |");
+	    System.out.println("|  [9]  DELETE A COURSE SCHEDULE         |");
 	    System.out.println("|  [0]  EXIT                             |");
 	    System.out.println("==========================================");
 	    System.out.println("Please select an option (0-9): ");

@@ -16,4 +16,8 @@ public class ScheduleService {
 		
 	}
 
+	public void removeCourseSchedule(int scheduleId) {
+		scheduleDAO.removeCourseSchedule(scheduleId);
+	}
+
 }

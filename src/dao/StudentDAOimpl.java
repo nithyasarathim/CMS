@@ -18,7 +18,7 @@ public class StudentDAOimpl implements StudentDAO {
 	@Override
 	public void addStudent(Student student) throws SQLException {
 		
-		String sql = "INSERT INTO STUDENTS (first_name, last_name, email, phone_number) VALUES (?,?,?,?) ";
+		String sql = "INSERT INTO STUDENTS (first_name, last_name, phone_number, email) VALUES (?,?,?,?) ";
 		
 		try(Connection con = DBconnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
 			ps.setString(1, student.getFirstName());
@@ -33,7 +33,6 @@ public class StudentDAOimpl implements StudentDAO {
 				System.out.println("Student Added successfully with ID :"+studentId);
 			}
 		}
-		
 	}
 
 	@Override
