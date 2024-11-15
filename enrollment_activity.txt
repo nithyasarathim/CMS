@@ -1,3 +1,1 @@
-2024-11-14 18:53:36 | Action: ENROLLED | Student ID: 4 | First Name: Shreeram | Last Name: sundar | Course ID: 6
-2024-11-14 18:54:01 | Action: DROPPED | Student ID: 4 | First Name: Shreeram | Last Name: sundar | Course ID: 6
-2024-11-14 18:54:18 | Action: DROPPED | Student ID: 4 | First Name: Shreeram | Last Name: sundar | Course ID: 6
+2024-11-15 08:35:40 | Action: ENROLLED | Student ID: 1 | First Name: Nithyasarathi | Last Name: Mummoorthi | Course ID: 1

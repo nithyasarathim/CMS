@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import exception.CourseNotFoundException;
+import exception.ScheduleNotFoundException;
 import exception.StudentNotFoundException;
 import model.DoctoralCourse;
 import model.PostgraduateCourse;
@@ -45,7 +46,7 @@ public class CourseController {
 		this.studentActivityUtil=new StudentActivityUtil();
 	}
 	
-	public void start() throws NumberFormatException, IOException, SQLException, StudentNotFoundException, CourseNotFoundException {
+	public void start() throws NumberFormatException, IOException, SQLException, StudentNotFoundException, CourseNotFoundException, ScheduleNotFoundException {
 		boolean running =true;
 		while(running)
 		{
@@ -107,6 +108,10 @@ public class CourseController {
 				viewEnrollmentLog();
 				break;
 				
+			case 13:
+				viewSchedule();
+				break;
+				
 			default:
 				System.out.println("Invalid option");
 			}
@@ -114,6 +119,10 @@ public class CourseController {
 		}
 	}
 	
+	private void viewSchedule() throws ScheduleNotFoundException {
+		scheduleService.viewSchedule();
+	}
+
 	private void viewCourseLog() {
 	    List<String> courseLogs = courseActivityUtil.retrieveCourseActivity();
 	    if (courseLogs.isEmpty()) {
@@ -269,6 +278,7 @@ public class CourseController {
 	    System.out.println("|  [10]  READ STUDENT LOG               |");
 	    System.out.println("|  [11]  READ COURSE LOG                |");
 	    System.out.println("|  [12]  READ ENROLLMENTS LOG           |");
+	    System.out.println("|  [13]  READ SCHEDULES                 |");
 	    System.out.println("|  [ 0]  EXIT                           |");
 	    System.out.println("==========================================");
 	    System.out.print("Please select an option (0-12): ");

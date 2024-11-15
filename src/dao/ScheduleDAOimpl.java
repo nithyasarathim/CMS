@@ -121,7 +121,38 @@ public class ScheduleDAOimpl implements ScheduleDAO {
 	    return false;
 	}
 
-    
-    
+	@Override
+	public void viewSchedule() throws ScheduleNotFoundException {
+	    String sql = "SELECT schedule_id, course_id, day_of_week, start_time, end_time FROM COURSESCHEDULES";
 
+	    try (Connection con = DBconnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+
+	        if (!rs.isBeforeFirst()) { // Check if ResultSet is empty
+	            throw new ScheduleNotFoundException("No schedules found in the database.");
+	        }
+
+	        System.out.println("====================================================================");
+	        System.out.println("| Schedule ID | Course ID | Day of Week | Start Time | End Time     |");
+	        System.out.println("====================================================================");
+
+	        while (rs.next()) {
+	            int scheduleId = rs.getInt("schedule_id");
+	            int courseId = rs.getInt("course_id");
+	            String dayOfWeek = rs.getString("day_of_week");
+	            String startTime = rs.getTime("start_time").toString();
+	            String endTime = rs.getTime("end_time").toString();
+
+	            System.out.printf("| %-11d | %-9d | %-11s | %-10s | %-10s |%n",
+	                              scheduleId, courseId, dayOfWeek, startTime, endTime);
+	        }
+
+	        System.out.println("====================================================================");
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error retrieving schedule information.");
+	    }
+	}
 }

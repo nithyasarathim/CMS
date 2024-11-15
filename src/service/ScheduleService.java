@@ -2,6 +2,7 @@ package service;
 
 import dao.ScheduleDAO;
 import dao.ScheduleDAOimpl;
+import exception.ScheduleNotFoundException;
 
 public class ScheduleService {
 	
@@ -18,6 +19,10 @@ public class ScheduleService {
 
 	public void removeCourseSchedule(int scheduleId) {
 		scheduleDAO.removeCourseSchedule(scheduleId);
+	}
+
+	public void viewSchedule() throws ScheduleNotFoundException {
+		scheduleDAO.viewSchedule();
 	}
 
 }
